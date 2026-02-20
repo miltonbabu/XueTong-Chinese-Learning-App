@@ -32657,7 +32657,7 @@ function sendMessage() {
   chatHistory.push({ role: "user", content: message });
 
   // Call backend API
-  fetch("http://localhost:3000/api/chat", {
+  fetch("/api/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32908,7 +32908,7 @@ function sendPopupMessage() {
 
   console.log("Sending popup message:", message);
 
-  fetch("http://localhost:3000/api/chat", {
+  fetch("/api/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33134,7 +33134,7 @@ function regenerateResponse(msgId, originalMessage) {
   `;
 
   // Call API again
-  fetch("http://localhost:3000/api/chat", {
+  fetch("/api/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -34232,7 +34232,7 @@ function startOnlineTracking() {
 }
 
 function updateOnlineCount() {
-  fetch("http://localhost:3000/api/online-count")
+  fetch("/api/online-count")
     .then((response) => response.json())
     .then((data) => {
       const onlineCountElement = document.getElementById("onlineCount");
@@ -34248,7 +34248,7 @@ function updateOnlineCount() {
 
 function pingServer(userId) {
   console.log("Pinging server with userId:", userId);
-  fetch("http://localhost:3000/api/ping", {
+  fetch("/api/ping", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
