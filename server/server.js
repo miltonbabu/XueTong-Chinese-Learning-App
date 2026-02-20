@@ -291,6 +291,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+// Serve the main HTML file at root URL
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'xuetong-latest.html'));
+});
+
 app.get('/api/online-count', (req, res) => {
   res.json({ count: onlineUsers.size });
 });
