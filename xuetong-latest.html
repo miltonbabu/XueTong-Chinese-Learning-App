@@ -411,17 +411,17 @@
 
                     wordsToShow.forEach(function(word, index) {
                       var card = document.createElement('div');
-                      card.className = 'bg-white dark:bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-sm';
+                      card.className = 'bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-sm';
                       card.innerHTML = '\
-                        <div class="flex items-center gap-4">\
-                          <div class="text-lg font-bold text-blue-600 dark:text-blue-400 w-8">' + (index + 1) + '</div>\
-                          <div>\
-                            <div class="text-3xl font-bold text-gray-800 dark:text-white mb-1">' + word.char + '</div>\
-                            <div class="text-lg text-gray-600 dark:text-gray-300">' + word.pinyin + '</div>\
+                        <div class="flex items-center gap-2 sm:gap-4">\
+                          <div class="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400 w-6 sm:w-8 flex-shrink-0">' + (index + 1) + '</div>\
+                          <div class="flex-1 min-w-0">\
+                            <div class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-0.5 sm:mb-1">' + word.char + '</div>\
+                            <div class="text-sm sm:text-lg text-gray-600 dark:text-gray-300">' + word.pinyin + '</div>\
                           </div>\
-                          <div class="ml-auto text-right flex items-center gap-3">\
-                            <div class="text-sm text-gray-700 dark:text-gray-200">' + word.meaning + '</div>\
-                            <button onclick="event.stopPropagation(); event.preventDefault(); if(typeof speakChinese === \'function\') speakChinese(\'' + word.char + '\')" ontouchend="event.stopPropagation(); event.preventDefault(); if(typeof speakChinese === \'function\') speakChinese(\'' + word.char + '\')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold transition-all flex items-center gap-1" style="min-width: 40px; min-height: 32px; pointer-events: auto !important;">🔊</button>\
+                          <div class="flex items-center gap-2 flex-shrink-0">\
+                            <div class="text-xs sm:text-sm text-gray-700 dark:text-gray-200 hidden sm:block">' + word.meaning + '</div>\
+                            <button onclick="event.stopPropagation(); event.preventDefault(); if(typeof speakChinese === \'function\') speakChinese(\'' + word.char + '\')" ontouchstart="event.stopPropagation(); event.preventDefault(); if(typeof speakChinese === \'function\') speakChinese(\'' + word.char + '\')" class="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 py-1 sm:py-1 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-1" style="min-width: 32px; min-height: 28px; pointer-events: auto !important; touch-action: manipulation !important;">🔊</button>\
                           </div>\
                         </div>';
                       container.appendChild(card);
@@ -1458,12 +1458,12 @@
 
     <!-- Movable AI Tutor Popup -->
     <div id="aiTutorPopup" class="fixed hidden z-[10000] w-96 max-w-[calc(100vw-2rem)]" style="left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; -webkit-transform: translate(-50%, -50%) !important;">
-      <div id="aiTutorPopupHeader" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-t-2xl cursor-move flex justify-between items-center" style="border-top-left-radius: 1rem !important; border-top-right-radius: 1rem !important; -webkit-border-top-left-radius: 1rem !important; -webkit-border-top-right-radius: 1rem !important;">
-        <div class="flex items-center gap-2">
+      <div id="aiTutorPopupHeader" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-t-2xl flex justify-between items-center select-none" style="border-top-left-radius: 1rem !important; border-top-right-radius: 1rem !important; -webkit-border-top-left-radius: 1rem !important; -webkit-border-top-right-radius: 1rem !important;">
+        <div class="flex items-center gap-2 pointer-events-none">
           <span class="text-xl">💬</span>
           <span class="font-bold">AI Tutor</span>
         </div>
-        <button onclick="event.stopPropagation(); event.preventDefault(); closeAITutorPopup();" ontouchend="event.stopPropagation(); event.preventDefault(); closeAITutorPopup();" class="text-white hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors hover:scale-110 active:scale-95" style="border-radius: 50% !important; -webkit-border-radius: 50% !important; cursor: pointer !important; pointer-events: auto !important; z-index: 10001 !important; min-width: 32px !important; min-height: 32px !important;">
+        <button onclick="event.stopPropagation(); event.preventDefault(); closeAITutorPopup(); return false;" ontouchstart="event.stopPropagation(); event.preventDefault(); closeAITutorPopup(); return false;" class="text-white hover:bg-white/20 rounded-full w-10 h-10 flex items-center justify-center transition-colors active:scale-95 select-none" style="border-radius: 50% !important; -webkit-border-radius: 50% !important; cursor: pointer !important; pointer-events: auto !important; z-index: 10001 !important; min-width: 40px !important; min-height: 40px !important; touch-action: manipulation !important;">
           ✕
         </button>
       </div>

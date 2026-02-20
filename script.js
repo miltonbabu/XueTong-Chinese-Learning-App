@@ -30445,29 +30445,27 @@ function renderVocabCards(showAll = false) {
   wordsToShow.forEach((word, index) => {
     const card = document.createElement("div");
     card.className =
-      "bg-white dark:bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-sm transition-all hover:shadow-md";
+      "bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-sm transition-all hover:shadow-md";
     card.title = "Click to view | Double-click to ask AI";
     const globalIndex = showAll
       ? (currentVocabPage - 1) * WORDS_PER_PAGE + index
       : index;
     card.innerHTML = `
-      <div class="flex items-center gap-4">
-        <div class="text-lg font-bold text-blue-600 dark:text-blue-400 w-8">${globalIndex + 1}</div>
-        <div>
-          <div class="text-3xl font-bold text-gray-800 dark:text-white mb-1">${word.char}</div>
-          <div class="text-lg text-gray-600 dark:text-gray-300">${word.pinyin}</div>
+      <div class="flex items-center gap-2 sm:gap-4">
+        <div class="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400 w-6 sm:w-8 flex-shrink-0">${globalIndex + 1}</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-0.5 sm:mb-1">${word.char}</div>
+          <div class="text-sm sm:text-lg text-gray-600 dark:text-gray-300">${word.pinyin}</div>
         </div>
-        <div class="ml-auto text-right flex items-center gap-2">
-          <div class="text-sm text-gray-700 dark:text-gray-200">${word.meaning}</div>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="event.stopPropagation(); copyVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded-full text-sm font-semibold transition-all flex items-center gap-1" title="Copy word">
+        <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+          <div class="text-xs sm:text-sm text-gray-700 dark:text-gray-200 hidden sm:block">${word.meaning}</div>
+          <button onclick="event.stopPropagation(); copyVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="bg-gray-500 hover:bg-gray-600 text-white px-1.5 sm:px-2 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-1" title="Copy word">
             📋
           </button>
-          <button onclick="event.stopPropagation(); shareVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 rounded-full text-sm font-semibold transition-all flex items-center gap-1" title="Share word">
+          <button onclick="event.stopPropagation(); shareVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="bg-purple-500 hover:bg-purple-600 text-white px-1.5 sm:px-2 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-1" title="Share word">
             🔗
           </button>
-          <button onclick="event.stopPropagation(); speakChinese('${word.char}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold transition-all flex items-center gap-1" title="Listen">
+          <button onclick="event.stopPropagation(); event.preventDefault(); speakChinese('${word.char}')" ontouchstart="event.stopPropagation(); event.preventDefault(); speakChinese('${word.char}')" class="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-1" style="touch-action: manipulation !important;" title="Listen">
             🔊
           </button>
         </div>
