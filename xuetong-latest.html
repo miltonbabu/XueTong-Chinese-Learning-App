@@ -421,7 +421,7 @@
                           </div>\
                           <div class="ml-auto text-right flex items-center gap-3">\
                             <div class="text-sm text-gray-700 dark:text-gray-200">' + word.meaning + '</div>\
-                            <button onclick="event.stopPropagation(); if(typeof speakChinese === \'function\') speakChinese(\'' + word.char + '\')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold transition-all flex items-center gap-1">🔊</button>\
+                            <button onclick="event.stopPropagation(); event.preventDefault(); if(typeof speakChinese === \'function\') speakChinese(\'' + word.char + '\')" ontouchend="event.stopPropagation(); event.preventDefault(); if(typeof speakChinese === \'function\') speakChinese(\'' + word.char + '\')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold transition-all flex items-center gap-1" style="min-width: 40px; min-height: 32px; pointer-events: auto !important;">🔊</button>\
                           </div>\
                         </div>';
                       container.appendChild(card);
@@ -1463,7 +1463,7 @@
           <span class="text-xl">💬</span>
           <span class="font-bold">AI Tutor</span>
         </div>
-        <button onclick="event.stopPropagation(); closeAITutorPopup();" class="text-white hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors hover:scale-110 active:scale-95" style="border-radius: 50% !important; -webkit-border-radius: 50% !important; cursor: pointer !important;">
+        <button onclick="event.stopPropagation(); event.preventDefault(); closeAITutorPopup();" ontouchend="event.stopPropagation(); event.preventDefault(); closeAITutorPopup();" class="text-white hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors hover:scale-110 active:scale-95" style="border-radius: 50% !important; -webkit-border-radius: 50% !important; cursor: pointer !important; pointer-events: auto !important; z-index: 10001 !important; min-width: 32px !important; min-height: 32px !important;">
           ✕
         </button>
       </div>

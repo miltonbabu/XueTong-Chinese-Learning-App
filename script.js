@@ -19,22 +19,37 @@ function speakChinese(text) {
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "zh-CN";
-    utterance.rate = 0.8; // Slightly slower for learning
+    utterance.rate = 0.8;
     utterance.pitch = 1;
 
-    // Try to find a Chinese voice
-    const voices = speechSynthesis.getVoices();
-    const chineseVoice = voices.find((voice) => voice.lang.includes("zh"));
-    if (chineseVoice) {
-      utterance.voice = chineseVoice;
-    }
+    // Load voices and find Chinese voice
+    const loadVoicesAndSpeak = () => {
+      const voices = speechSynthesis.getVoices();
+      const chineseVoice = voices.find((voice) => voice.lang.includes("zh"));
+      if (chineseVoice) {
+        utterance.voice = chineseVoice;
+      }
+      speechSynthesis.speak(utterance);
+    };
 
-    speechSynthesis.speak(utterance);
+    // Handle both cases: voices already loaded or need to wait
+    if (speechSynthesis.getVoices().length > 0) {
+      loadVoicesAndSpeak();
+    } else {
+      speechSynthesis.onvoiceschanged = loadVoicesAndSpeak;
+      // Fallback: try to speak anyway after a short delay
+      setTimeout(() => {
+        if (speechSynthesis.getVoices().length === 0) {
+          speechSynthesis.speak(utterance);
+        }
+      }, 100);
+    }
 
     // Track listening activity
     trackListeningActivity(text);
   } else {
     console.warn("Text-to-speech not supported in this browser");
+    alert("Text-to-speech is not supported in this browser. Please try a different browser.");
   }
 }
 
