@@ -1,0 +1,28 @@
+{
+  "name": "xuetong-ai-backend",
+  "version": "1.0.0",
+  "description": "Backend for XueTong AI Tutor using DeepSeek API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "lint": "echo 'No linting configured'",
+    "test": "echo 'No tests configured'"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "keywords": [
+    "chinese",
+    "hsk",
+    "ai-tutor",
+    "deepseek"
+  ],
+  "author": "XueTong",
+  "license": "MIT"
+}

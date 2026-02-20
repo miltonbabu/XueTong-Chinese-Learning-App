@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "name": "xuetong-app",
+  "builds": [
+    {
+      "src": "server/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server/server.js"
+    },
+    {
+      "src": "/health",
+      "dest": "/server/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "outputDirectory": ".",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "server/server.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
+}

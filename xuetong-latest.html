@@ -1,0 +1,1505 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>XueTong 学通 - HSK Chinese Learning App</title>
+    
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="images/android-chrome-512x512.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              'sans': ['Inter', 'system-ui', 'sans-serif'],
+            },
+            colors: {
+              primary: {
+                50: '#eef2ff',
+                100: '#e0e7ff',
+                200: '#c7d2fe',
+                300: '#a5b4fc',
+                400: '#818cf8',
+                500: '#667eea',
+                600: '#5b5bd6',
+                700: '#4c4cb3',
+                800: '#3f3f91',
+                900: '#353574',
+              },
+              accent: {
+                purple: '#764ba2',
+                pink: '#f093fb',
+                cyan: '#4facfe',
+                coral: '#f5576c',
+              }
+            },
+            animation: {
+              'slide-up': 'slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+              'slide-down': 'slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              'fade-in': 'fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              'scale-in': 'scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              'bounce-in': 'bounceIn 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+              'float': 'float 3s ease-in-out infinite',
+              'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+              'shimmer': 'shimmer 1.5s ease-in-out infinite',
+              'glow': 'glow 2s ease-in-out infinite',
+            },
+            keyframes: {
+              slideUp: {
+                '0%': { transform: 'translateY(30px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              slideDown: {
+                '0%': { transform: 'translateY(-30px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              scaleIn: {
+                '0%': { transform: 'scale(0.9)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
+              },
+              bounceIn: {
+                '0%': { transform: 'scale(0.3)', opacity: '0' },
+                '50%': { transform: 'scale(1.08)' },
+                '70%': { transform: 'scale(0.95)' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              pulseSoft: {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0.7' },
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '-200% 0' },
+                '100%': { backgroundPosition: '200% 0' },
+              },
+              glow: {
+                '0%, 100%': { boxShadow: '0 0 10px rgba(102, 126, 234, 0.3)' },
+                '50%': { boxShadow: '0 0 30px rgba(102, 126, 234, 0.6)' },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="min-h-screen transition-colors font-sans">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-primary-500/30 via-accent-purple/20 to-accent-pink/30 dark:from-primary-900/40 dark:via-gray-900/60 dark:to-accent-purple/30"></div>
+      <div class="absolute top-0 left-0 w-96 h-96 bg-primary-400/20 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-0 right-0 w-96 h-96 bg-accent-pink/20 rounded-full blur-3xl animate-float" style="animation-delay: -1.5s;"></div>
+      <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-accent-cyan/15 rounded-full blur-3xl animate-float" style="animation-delay: -0.75s;"></div>
+    </div>
+    
+    <!-- App Container -->
+    <div id="app" class="relative mx-auto min-h-screen md:min-h-screen md:py-8 md:px-4 max-w-[420px] md:max-w-[1200px] w-full">
+      <!-- App Frame -->
+      <div class="relative glass min-h-screen md:min-h-[calc(100vh-4rem)] overflow-hidden flex flex-col rounded-none md:rounded-3xl w-full">
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 overflow-y-auto overflow-x-hidden pb-24 md:pb-6 w-full">
+          <!-- Header -->
+          <header class="sticky top-0 z-40 glass border-b border-gray-200 dark:border-gray-700 px-4 py-4 md:px-6 md:py-5 w-full overflow-hidden">
+            <div class="flex justify-between items-center">
+              <div class="flex-1">
+                <div class="flex items-center gap-3">
+                  <div class="cursor-pointer" onclick="location.reload()" title="Click to reload homepage">
+                    <img src="images/Logo-xuetong.png" alt="XueTong Logo" class="w-10 h-10 md:w-12 md:h-12 object-contain">
+                    <h1 class="text-lg md:text-xl font-bold">
+                      <span class="gradient-text">XueTong</span>
+                      <span class="gradient-text ml-1">学通</span>
+                    </h1>
+                    <p class="text-xs md:text-sm font-semibold tracking-wide animate-shimmer" style="background: linear-gradient(90deg, rgb(245, 87, 108), rgb(240, 147, 251), rgb(102, 126, 234), rgb(79, 172, 254), rgb(245, 87, 108)); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                      Smart Learning for Chinese Mastery
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Stats & Theme Toggle -->
+              <div class="flex items-center gap-2 md:gap-4 -mt-2 md:mt-0">
+                <!-- Online Users Counter -->
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-2xl glass">
+                  <span class="text-lg">👥</span>
+                  <span id="onlineCount" class="text-sm font-bold text-gray-700 dark:text-gray-300">0</span>
+                  <span class="text-xs text-green-600 dark:text-green-400">online</span>
+                </div>
+                
+                <!-- Theme Toggle -->
+                <button
+                  onclick="toggleTheme()"
+                  id="themeToggle"
+                  class="w-11 h-11 rounded-2xl glass  flex items-center justify-center "
+                  title="Toggle Dark Mode"
+                >
+                  <span id="themeIcon" class="text-xl">🌙</span>
+                </button>
+                
+                <!-- About Button -->
+                <button
+                  onclick="showAboutModal()"
+                  id="aboutBtn"
+                  class="w-11 h-11 rounded-2xl flex items-center justify-center "
+                  title="About XueTong"
+                >
+                  <img src="images/about.png" alt="About" class="w-9 h-9 object-contain">
+                </button>
+              </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="mt-4">
+              <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
+                <span>Progress to Level <span id="nextLevel" class="text-primary-500 dark:text-primary-400">2</span></span>
+                <span><span id="currentXP" class="text-primary-500 dark:text-primary-400 font-bold">0</span>/<span id="xpNeeded">100</span> XP</span>
+              </div>
+              <div class="progress-bar">
+                <div id="xpBar" class="progress-bar-fill" style="width: 0%"></div>
+              </div>
+            </div>
+          </header>
+
+          <!-- HSK Level Selector -->
+          <div id="hskLevelSelector" class="px-4 py-4 md:px-6 md:py-5">
+            <div class="mb-3 flex items-center gap-2">
+              <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">📚 Choose a level to start learning:</span>
+            </div>
+            <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              <div class="flex flex-col items-center">
+                <button onclick="switchLevel('hsk1')" id="btnHSK1" class="btn-level hsk-level-1 flex flex-col items-center">
+                  <span>HSK 1</span>
+                </button>
+                <span class="text-sm mt-2 font-bold text-blue-500 dark:text-blue-400 word-count hidden" id="wordCountHSK1">150 Words</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <button onclick="switchLevel('hsk2')" id="btnHSK2" class="btn-level hsk-level-2 flex flex-col items-center">
+                  <span>HSK 2</span>
+                </button>
+                <span class="text-sm mt-2 font-bold text-blue-500 dark:text-blue-400 word-count hidden" id="wordCountHSK2">300 Words</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <button onclick="switchLevel('hsk3')" id="btnHSK3" class="btn-level hsk-level-3 flex flex-col items-center">
+                  <span>HSK 3</span>
+                </button>
+                <span class="text-sm mt-2 font-bold text-blue-500 dark:text-blue-400 word-count hidden" id="wordCountHSK3">600 Words</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <button onclick="switchLevel('hsk4')" id="btnHSK4" class="btn-level hsk-level-4 flex flex-col items-center">
+                  <span>HSK 4</span>
+                </button>
+                <span class="text-sm mt-2 font-bold text-blue-500 dark:text-blue-400 word-count hidden" id="wordCountHSK4">1200 Words</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <button onclick="switchLevel('hsk5')" id="btnHSK5" class="btn-level hsk-level-5 flex flex-col items-center">
+                  <span>HSK 5</span>
+                </button>
+                <span class="text-sm mt-2 font-bold text-blue-500 dark:text-blue-400 word-count hidden" id="wordCountHSK5">2500 Words</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <button onclick="switchLevel('hsk6')" id="btnHSK6" class="btn-level hsk-level-6 flex flex-col items-center">
+                  <span>HSK 6</span>
+                </button>
+                <span class="text-sm mt-2 font-bold text-blue-500 dark:text-blue-400 word-count hidden" id="wordCountHSK6">5000 Words</span>
+              </div>
+              <div class="flex flex-col items-center">
+                <button onclick="switchToAdvancedGrammar()" id="btnAdvancedGrammar" class="btn-level advanced-grammar-btn flex flex-col items-center">
+                  <span>Advanced Grammar</span>
+                </button>
+                <span class="text-sm mt-2 font-bold text-purple-500 dark:text-purple-400 word-count hidden" id="wordCountAdvancedGrammar">Grammar</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Bar -->
+          <div id="searchBar" class="px-4 pb-4 md:px-6 md:pb-5">
+            <div class="relative">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search Chinese, Pinyin, or English..."
+                class="input-search w-full pl-14 pr-12"
+                oninput="performSearch(this.value)"
+                onkeypress="if (event.key === 'Enter') performSearch(this.value);"
+              />
+              <div class="absolute left-5 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500 to-accent-purple flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              </div>
+              <button
+                onclick="clearSearch()"
+                id="clearSearchBtn"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 w-7 h-7 rounded-xl bg-gray-200/80 dark:bg-gray-700/80 text-gray-500 dark:text-gray-400  hidden flex items-center justify-center text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <!-- Advanced Search Toggle -->
+            <button
+              onclick="toggleAdvancedSearch()"
+              id="advancedSearchToggle"
+              class="mt-3 text-sm text-primary-500 dark:text-primary-400  flex items-center gap-2 font-medium"
+            >
+              <span id="advancedSearchIcon" class=" text-xs">▶</span> 
+              Advanced Search Options
+            </button>
+            
+            <!-- Advanced Search Options -->
+            <div id="advancedSearchOptions" class="mt-4 p-5 glass rounded-2xl hidden animate-slide-down">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- HSK Level Filter -->
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">HSK Level Filter</label>
+                  <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                    <label class="inline-flex items-center cursor-pointer flex-shrink-0">
+                      <input type="checkbox" id="filterHSK1" class="form-checkbox" checked>
+                      <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">HSK 1</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer flex-shrink-0">
+                      <input type="checkbox" id="filterHSK2" class="form-checkbox" checked>
+                      <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">HSK 2</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer flex-shrink-0">
+                      <input type="checkbox" id="filterHSK3" class="form-checkbox" checked>
+                      <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">HSK 3</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer flex-shrink-0">
+                      <input type="checkbox" id="filterHSK4" class="form-checkbox" checked>
+                      <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">HSK 4</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer flex-shrink-0">
+                      <input type="checkbox" id="filterHSK5" class="form-checkbox" checked>
+                      <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">HSK 5</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer flex-shrink-0">
+                      <input type="checkbox" id="filterHSK6" class="form-checkbox" checked>
+                      <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">HSK 6</span>
+                    </label>
+                  </div>
+                </div>
+                <!-- Search Type -->
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Search In</label>
+                  <div class="space-y-3">
+                    <label class="inline-flex items-center cursor-pointer mr-4">
+                      <input type="checkbox" id="searchInChar" class="form-checkbox" checked>
+                      <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">Chinese</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer mr-4">
+                      <input type="checkbox" id="searchInPinyin" class="form-checkbox" checked>
+                      <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">Pinyin</span>
+                    </label>
+                    <label class="inline-flex items-center cursor-pointer">
+                      <input type="checkbox" id="searchInMeaning" class="form-checkbox" checked>
+                      <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">English</span>
+                    </label>
+                  </div>
+                </div>
+                <!-- Sort Options -->
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Sort Results By</label>
+                  <select id="sortResults" class="w-full px-4 py-3 rounded-xl border-2 border-white/30 dark:border-white/10 bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-200 text-sm font-medium focus:outline-none focus:border-primary-500">
+                    <option value="relevance">Relevance</option>
+                    <option value="level-asc">HSK Level (Low to High)</option>
+                    <option value="level-desc">HSK Level (High to Low)</option>
+                    <option value="char-asc">Character (A-Z)</option>
+                    <option value="pinyin-asc">Pinyin (A-Z)</option>
+                  </select>
+                </div>
+              </div>
+              <!-- Additional Options -->
+              <div class="mt-5 flex flex-wrap gap-4">
+                <label class="inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="exactMatch" class="form-checkbox">
+                  <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">Exact Match Only</span>
+                </label>
+                <label class="inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="caseSensitive" class="form-checkbox">
+                  <span class="ml-2 text-xs text-gray-600 dark:text-gray-300 font-medium">Case Sensitive</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Results Section -->
+          <div id="searchResultsTab" class="hidden px-4 md:px-6 animate-fade-in">
+            <div class="card p-5 md:p-6">
+              <div class="flex justify-between items-center mb-5">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                  <span class="text-xl">🔍</span> Search Results
+                </h2>
+                <div class="flex items-center gap-3">
+                  <span id="searchResultCount" class="text-sm text-gray-500 dark:text-gray-400 font-medium"></span>
+                  <button onclick="clearSearch()" class="btn-secondary text-sm py-2 px-4">Clear</button>
+                </div>
+              </div>
+              <div id="searchFiltersSummary" class="mb-4 text-sm text-gray-500 dark:text-gray-400"></div>
+              <div id="searchHistoryContainer" class="mb-4 hidden">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-semibold text-gray-600 dark:text-gray-300">Recent Searches:</span>
+                  <button onclick="clearSearchHistoryUI()" class="text-xs text-accent-coral hover:text-red-600 font-medium">Clear History</button>
+                </div>
+                <div id="searchHistoryList" class="flex flex-wrap gap-2"></div>
+              </div>
+              <div id="searchResults" class="space-y-3"></div>
+              <div id="searchPagination" class="mt-6 flex justify-center items-center gap-2"></div>
+            </div>
+          </div>
+
+          <!-- Learn Tab -->
+          <div id="learnTab" class="px-4 md:px-6 animate-slide-up">
+            <div class="grid md:grid-cols-2 gap-5 md:gap-6">
+              <div class="card p-5 md:p-6">
+                <div class="flex justify-between items-center mb-5">
+                  <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span class="text-xl">📚</span> Vocabulary List
+                  </h2>
+                  <button onclick="showAllWords()" id="viewAllBtn" class="btn-primary text-sm py-2 px-4">
+                    <span>📋</span>
+                    <span>View All</span>
+                  </button>
+                </div>
+                <div id="vocabCards" class="space-y-3">
+                  <!-- Loading placeholder -->
+                  <div class="text-center py-4 text-gray-500">Loading vocabulary...</div>
+                </div>
+                <script>
+                  // Immediate test - try to populate vocab cards
+                  setTimeout(function() {
+                    var container = document.getElementById('vocabCards');
+                    if (!container) return;
+
+                    // Check if already populated
+                    if (container.children.length > 1) return;
+
+                    // Try to get vocabulary
+                    var vocab = (typeof vocabulary !== 'undefined' && vocabulary.length > 0)
+                      ? vocabulary
+                      : (typeof hskVocabulary !== 'undefined' && hskVocabulary.hsk1)
+                        ? hskVocabulary.hsk1
+                        : [];
+
+                    if (vocab.length === 0) {
+                      container.innerHTML = '<div class="text-center py-4 text-red-500">Error: Could not load vocabulary</div>';
+                      return;
+                    }
+
+                    // Clear and render first 10 words
+                    container.innerHTML = '';
+                    var wordsToShow = vocab.slice(0, 10);
+
+                    wordsToShow.forEach(function(word, index) {
+                      var card = document.createElement('div');
+                      card.className = 'bg-white dark:bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-sm';
+                      card.innerHTML = '\
+                        <div class="flex items-center gap-4">\
+                          <div class="text-lg font-bold text-blue-600 dark:text-blue-400 w-8">' + (index + 1) + '</div>\
+                          <div>\
+                            <div class="text-3xl font-bold text-gray-800 dark:text-white mb-1">' + word.char + '</div>\
+                            <div class="text-lg text-gray-600 dark:text-gray-300">' + word.pinyin + '</div>\
+                          </div>\
+                          <div class="ml-auto text-right flex items-center gap-3">\
+                            <div class="text-sm text-gray-700 dark:text-gray-200">' + word.meaning + '</div>\
+                            <button onclick="event.stopPropagation(); if(typeof speakChinese === \'function\') speakChinese(\'' + word.char + '\')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold transition-all flex items-center gap-1">🔊</button>\
+                          </div>\
+                        </div>';
+                      container.appendChild(card);
+                    });
+                  }, 50);
+                </script>
+              </div>
+
+              <div class="card p-5 md:p-6">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+                  <span class="text-xl">👁️</span> Visual Learning
+                </h2>
+                <div id="visualLearn" class="space-y-4">
+                  <div class="text-center p-6 md:p-8 rounded-2xl bg-gradient-to-br from-primary-500/10 via-accent-purple/10 to-accent-pink/10 dark:from-primary-500/20 dark:via-accent-purple/20 dark:to-accent-pink/20 border border-white/30 dark:border-white/10">
+                    <div class="text-7xl md:text-8xl mb-4 text-gray-900 dark:text-white font-bold animate-float" id="bigCharacter">你</div>
+                    <div class="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100" id="charPinyin">nǐ</div>
+                    <div class="text-base md:text-lg text-gray-600 dark:text-gray-300 mt-1 font-medium" id="charMeaning">you</div>
+                    <div class="mt-4 p-4 glass rounded-xl">
+                      <p class="text-sm text-gray-700 dark:text-gray-200 font-medium" id="charBreakdown">
+                        <strong class="text-primary-500 dark:text-primary-400">Character breakdown:</strong> 你 (nǐ) consists of 亻(person radical) + 尔
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex gap-3">
+                    <button onclick="previousChar()" id="prevCharBtn" class="btn-secondary flex-1 py-3">← Previous</button>
+                    <button onclick="nextChar()" id="nextCharBtn" class="btn-primary flex-1 py-3">Next →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flashcards Tab -->
+          <div id="flashcardsTab" class="hidden px-4 md:px-6 animate-fade-in">
+            <div class="card p-5 md:p-6">
+              <div class="flex justify-between items-center mb-5 md:mb-4">
+                <div>
+                  <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span class="text-xl">🎴</span> Flashcards
+                  </h2>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">
+                    Study vocabulary with interactive flashcards
+                  </p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button onclick="showFlashcardSettings()" id="flashcardSettingsBtn" class="btn-secondary text-sm py-2 px-4">
+                    ⚙️ Settings
+                  </button>
+                  <div class="text-right">
+                    <div class="text-xs text-gray-500 dark:text-gray-400 font-medium">Current Level</div>
+                    <div class="text-lg md:text-xl font-bold gradient-text" id="flashcardLevel">HSK 1</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flashcard Settings Panel -->
+              <div id="flashcardSettingsPanel" class="hidden mb-5 p-4 glass rounded-2xl animate-slide-down">
+                <!-- Practice Mode -->
+                <div class="mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Practice Mode:</label>
+                  <div class="flex gap-2">
+                    <button onclick="setFlashcardPracticeMode('character')" id="btnPracticeChar" class="btn-mode active flex-1 py-3">汉 Character</button>
+                    <button onclick="setFlashcardPracticeMode('pinyin')" id="btnPracticePinyin" class="btn-mode flex-1 py-3">🔤 Pinyin</button>
+                    <button onclick="setFlashcardPracticeMode('meaning')" id="btnPracticeMeaning" class="btn-mode flex-1 py-3">🇬🇧 Meaning</button>
+                  </div>
+                </div>
+
+                <!-- Shuffle Mode -->
+                <div class="mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Shuffle Mode:</label>
+                  <div class="flex gap-2">
+                    <button onclick="setFlashcardMode('random')" id="btnFlashRandom" class="btn-mode flex-1 py-3">🔀 Random</button>
+                    <button onclick="setFlashcardMode('sequential')" id="btnFlashSequential" class="btn-mode active flex-1 py-3">➡️ Sequential</button>
+                    <button onclick="setFlashcardMode('unlearned')" id="btnFlashUnlearned" class="btn-mode flex-1 py-3">⭐ New Only</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="mb-5 md:mb-4">
+                <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
+                  <span>Card <span id="currentCardNum" class="text-primary-500 dark:text-primary-400 font-bold">1</span> of <span id="totalCardsNum">150</span></span>
+                  <span id="flashcardProgress">0% Complete</span>
+                </div>
+                <div class="progress-bar">
+                  <div id="flashcardProgressBar" class="progress-bar-fill" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Flashcard Display -->
+              <div class="relative">
+                <div id="flashcard" class="flashcard-container cursor-pointer" onclick="flipCard()">
+                  <div class="flashcard" id="flashcardInner">
+                    <!-- Front Side -->
+                    <div class="flashcard-front">
+                      <div class="h-80 md:h-96 rounded-2xl flex flex-col items-center justify-center p-6 md:p-8">
+                        <div class="text-7xl md:text-9xl mb-5 text-gray-900 dark:text-white font-bold" id="flashcardChar">你</div>
+                        <button
+                          onclick="event.stopPropagation(); speakChinese(document.getElementById('flashcardChar').textContent);"
+                          id="listenBtn"
+                          class="btn-primary py-3 px-6"
+                        >
+                          🔊 Listen
+                        </button>
+                        <div class="mt-5 text-gray-400 dark:text-gray-500 text-sm font-medium">
+                          Tap to reveal answer
+                        </div>
+                        <div class="mt-2 text-primary-600 dark:text-primary-400 text-base font-semibold" id="flashcardLevelFront">
+                          HSK 1
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Back Side -->
+                    <div class="flashcard-back">
+                      <div class="h-80 md:h-96 rounded-2xl flex flex-col items-center justify-center p-6 md:p-8">
+                        <div class="text-5xl md:text-7xl mb-3 text-gray-900 dark:text-white font-bold" id="flashcardCharBack">你</div>
+                        <div class="text-xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-1" id="flashcardPinyin">nǐ</div>
+                        <div class="text-lg md:text-xl text-gray-600 dark:text-gray-200 mb-4 font-medium" id="flashcardMeaning">you</div>
+                        <div class="glass rounded-xl p-4 max-w-md">
+                          <p class="text-sm text-gray-700 dark:text-gray-200 font-medium" id="flashcardBreakdown">
+                            <strong class="text-primary-500 dark:text-primary-400">Breakdown:</strong> 你 consists of 亻(person radical) + 尔
+                          </p>
+                        </div>
+                        <div class="mt-5 flex gap-3">
+                          <button onclick="event.stopPropagation(); markCard('known');" class="btn-success py-3 px-5">✓ I Know This</button>
+                          <button onclick="event.stopPropagation(); markCard('learning');" class="btn-warning py-3 px-5">📚 Still Learning</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <div class="flex gap-3 mt-5 md:mt-6">
+                <button onclick="previousFlashcard()" id="prevFlashcardBtn" class="btn-secondary flex-1 py-3">← Previous</button>
+                <button onclick="nextFlashcard()" id="nextFlashcardBtn" class="btn-primary flex-1 py-3">Next →</button>
+              </div>
+
+              <!-- Statistics -->
+              <div class="mt-5 md:mt-6 grid grid-cols-3 gap-3 md:gap-4">
+                <div class="glass rounded-2xl p-4 text-center">
+                  <div class="text-xl md:text-3xl font-bold text-accent-cyan" id="knownCount">0</div>
+                  <div class="text-xs md:text-xs text-gray-600 dark:text-gray-300 font-medium">Known</div>
+                </div>
+                <div class="glass rounded-2xl p-4 text-center">
+                  <div class="text-xl md:text-3xl font-bold text-amber-500" id="learningCount">0</div>
+                  <div class="text-xs md:text-xs text-gray-600 dark:text-gray-300 font-medium">Learning</div>
+                </div>
+                <div class="glass rounded-2xl p-4 text-center">
+                  <div class="text-xl md:text-3xl font-bold text-gray-500 dark:text-gray-400" id="newCount">0</div>
+                  <div class="text-xs md:text-xs text-gray-600 dark:text-gray-300 font-medium">New</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Practice Tab -->
+          <div id="practiceTab" class="hidden px-4 md:px-6 animate-fade-in">
+            <div class="card p-5 md:p-6">
+              <!-- Quiz Header -->
+              <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-5">
+                <div>
+                  <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span class="text-xl">🎯</span> Quiz Time!
+                  </h2>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">HSK Level: <span id="quizLevelDisplay" class="font-bold text-primary-500">HSK 1</span></p>
+                </div>
+                <button onclick="showQuizSettings()" id="quizSettingsBtn" class="btn-secondary text-sm py-2 px-4">
+                  ⚙️ Settings
+                </button>
+              </div>
+
+              <!-- Quiz Settings Panel -->
+              <div id="quizSettingsPanel" class="hidden mb-5 p-4 glass rounded-2xl animate-slide-down">
+                <!-- Question Count -->
+                <div class="mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Number of Questions</label>
+                  <div class="flex gap-2 flex-wrap">
+                    <button onclick="setQuizQuestionCount(10)" id="btnQ10" class="btn-mode active text-sm py-2 px-4">10 Questions</button>
+                    <button onclick="setQuizQuestionCount(15)" id="btnQ15" class="btn-mode text-sm py-2 px-4">15 Questions</button>
+                    <button onclick="setQuizQuestionCount(20)" id="btnQ20" class="btn-mode text-sm py-2 px-4">20 Questions</button>
+                    <button onclick="setQuizQuestionCount(30)" id="btnQ30" class="btn-mode text-sm py-2 px-4">30 Questions</button>
+                  </div>
+                </div>
+
+                <!-- Question Type -->
+                <div class="mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Question Type</label>
+                  <div class="flex gap-2 flex-wrap">
+                    <button onclick="setQuizType('char-to-meaning')" id="btnQuizCharMeaning" class="btn-mode active text-xs md:text-sm py-2 px-3">汉字 → English</button>
+                    <button onclick="setQuizType('char-to-pinyin')" id="btnQuizCharPinyin" class="btn-mode text-xs md:text-sm py-2 px-3">汉字 → Pinyin</button>
+                    <button onclick="setQuizType('meaning-to-char')" id="btnQuizMeaningChar" class="btn-mode text-xs md:text-sm py-2 px-3">English → 汉字</button>
+                    <button onclick="setQuizType('listening')" id="btnQuizListening" class="btn-mode text-xs md:text-sm py-2 px-3">🔊 Listening</button>
+                  </div>
+                </div>
+
+                <!-- Quiz Mode -->
+                <div class="mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Quiz Mode</label>
+                  <div class="flex gap-2 flex-wrap">
+                    <button onclick="setQuizMode('random')" id="btnQuizRandom" class="btn-mode active text-sm py-2 px-4">🔀 Random</button>
+                    <button onclick="setQuizMode('sequential')" id="btnQuizSequential" class="btn-mode text-sm py-2 px-4">➡️ Sequential</button>
+                  </div>
+                </div>
+
+                <!-- Timer -->
+                <div class="mb-4">
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Timer (Optional) - Total Quiz Time</label>
+                  <div class="flex gap-2 flex-wrap items-center">
+                    <button onclick="setQuizTimer(0)" id="btnTimerOff" class="btn-mode active text-sm py-2 px-4">⏱️ Off</button>
+                    <button onclick="setQuizTimer(300)" id="btnTimer5min" class="btn-mode text-sm py-2 px-4">5 min</button>
+                    <button onclick="setQuizTimer(600)" id="btnTimer10min" class="btn-mode text-sm py-2 px-4">10 min</button>
+                    <button onclick="setQuizTimer(900)" id="btnTimer15min" class="btn-mode text-sm py-2 px-4">15 min</button>
+                    <button onclick="setQuizTimer(1200)" id="btnTimer20min" class="btn-mode text-sm py-2 px-4">20 min</button>
+                  </div>
+                </div>
+
+                <!-- Start Button -->
+                <button onclick="startQuiz()" class="btn-primary w-full py-3 mt-2">
+                  🚀 Start Quiz
+                </button>
+              </div>
+
+              <!-- Quiz Container -->
+              <div id="quizContainer">
+                <!-- Quiz Not Started State -->
+                <div id="quizNotStarted" class="text-center py-8">
+                  <div class="text-6xl mb-4">🎯</div>
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Ready to Test Your Chinese?</h3>
+                  <p class="text-gray-500 dark:text-gray-400 mb-4">Click Settings to customize your quiz, then start!</p>
+                  <button onclick="startQuiz()" class="btn-primary py-3 px-8">🚀 Start Quiz</button>
+                </div>
+
+                <!-- Quiz In Progress State -->
+                <div id="quizInProgress" class="hidden">
+                  <!-- Progress & Timer -->
+                  <div class="mb-5 md:mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                      <span class="text-sm font-semibold text-gray-600 dark:text-gray-300">Question <span id="questionNum" class="text-primary-500 dark:text-primary-400">1</span> of <span id="totalQuestions">10</span></span>
+                      <div class="flex items-center gap-3">
+                        <span id="quizTimerDisplay" class="hidden text-sm font-semibold text-orange-500 dark:text-orange-400">⏱️ <span id="timerValue">2:00</span></span>
+                        <span class="text-sm font-semibold text-primary-500 dark:text-primary-400">Score: <span id="quizScore" class="font-bold">0</span></span>
+                      </div>
+                    </div>
+                    <div class="progress-bar">
+                      <div id="quizProgress" class="progress-bar-fill" style="width: 10%"></div>
+                    </div>
+                  </div>
+
+                  <!-- Question Display -->
+                  <div class="text-center mb-5 md:mb-4">
+                    <div class="text-6xl md:text-7xl mb-4 animate-float" id="quizCharacter">好</div>
+                    <div class="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-100" id="quizQuestion">
+                      What does this character mean?
+                    </div>
+                    <button onclick="speakQuizWord()" id="quizSpeakBtn" class="mt-3 btn-secondary text-sm py-2 px-4 hidden">🔊 Listen</button>
+                  </div>
+
+                  <!-- Options -->
+                  <div class="grid grid-cols-2 gap-3 md:gap-4" id="quizOptions"></div>
+
+                  <!-- Feedback -->
+                  <div id="quizFeedback" class="hidden mt-5 md:mt-6 p-4 rounded-xl text-center font-medium"></div>
+
+                  <!-- Navigation Buttons -->
+                  <div class="flex gap-3 mt-5 md:mt-6">
+                    <button onclick="previousQuizQuestion()" id="prevQuizBtn" class="btn-secondary flex-1 py-3" disabled>← Previous</button>
+                    <button onclick="nextQuizQuestion()" id="nextQuizBtn" class="btn-primary flex-1 py-3 hidden">Next →</button>
+                    <button onclick="finishQuiz()" id="finishQuizBtn" class="btn-success flex-1 py-3 hidden">✓ Finish Quiz</button>
+                  </div>
+                </div>
+
+                <!-- Quiz Completed State -->
+                <div id="quizCompleted" class="hidden text-center py-8">
+                  <div class="text-6xl mb-4">🎉</div>
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Quiz Completed!</h3>
+                  <div class="glass rounded-2xl p-6 mt-4 max-w-md mx-auto">
+                    <div class="grid grid-cols-2 gap-4 text-left">
+                      <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Score</p>
+                        <p class="text-xl font-bold text-primary-500" id="finalScore">0/10</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Accuracy</p>
+                        <p class="text-xl font-bold text-green-500" id="finalAccuracy">0%</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Correct</p>
+                        <p class="text-xl font-bold text-green-500" id="finalCorrect">0</p>
+                      </div>
+                      <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Wrong</p>
+                        <p class="text-xl font-bold text-red-500" id="finalWrong">0</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex gap-3 mt-6 justify-center">
+                    <button onclick="retryWrongAnswers()" id="retryWrongBtn" class="btn-warning py-3 px-6 hidden">🔄 Retry Wrong Answers</button>
+                    <button onclick="startQuiz()" class="btn-primary py-3 px-6">🔄 New Quiz</button>
+                      <button onclick="openShareModal()" class="btn-secondary py-3 px-6">📤 Share Results</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Tutor Tab -->
+          <div id="ai-tutorTab" class="hidden px-4 md:px-6 animate-fade-in">
+            <div class="card p-5 md:p-6">
+              <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <span class="text-xl">🧠</span> Your AI Chinese Tutor
+              </h2>
+              <div class="glass border-l-4 border-primary-500 p-4 mb-4 rounded-r-xl rounded-l-none">
+                <p class="text-sm text-gray-700 dark:text-gray-200 font-medium">
+                  <strong class="text-primary-500 dark:text-primary-400">Your personalized AI tutor</strong> adapts to your learning style and helps you practice conversations, grammar, and pronunciation!
+                </p>
+              </div>
+
+              <div class="flex justify-between items-center mb-2">
+                  <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">Chat with XueTong AI</p>
+                  <button onclick="clearChatHistory()" class="text-xs px-3 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors font-medium">
+                    Clear Chat
+                  </button>
+                </div>
+                <div id="chatMessages" class="space-y-4 mb-4 h-64 md:h-88 overflow-y-auto glass rounded-2xl p-4">
+                <div class="flex gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-purple flex items-center justify-center text-white font-bold flex-shrink-0 shadow-lg shadow-primary-500/30">
+                    AI
+                  </div>
+                  <div class="glass rounded-2xl rounded-tl-none p-4 max-w-[85%]">
+                    <p class="text-gray-800 dark:text-gray-100 text-sm md:text-base font-medium">
+                      你好! I'm your Chinese tutor. I can help you with:
+                    </p>
+                    <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-1 font-medium">
+                      <li>• Practicing conversations</li>
+                      <li>• Explaining grammar</li>
+                      <li>• Pronunciation tips</li>
+                      <li>• Cultural insights</li>
+                    </ul>
+                    <p class="mt-2 text-gray-800 dark:text-gray-100 text-sm md:text-base font-medium">
+                      What would you like to practice today?
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Preset Prompts Section -->
+              <div class="mb-4">
+                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">Quick Start Prompts:</p>
+                <div class="flex flex-wrap gap-2">
+                  <button onclick="fillPresetMessage('I need a roadmap for HSK 4 exam preparation')" class="preset-btn">
+                    🗺️ HSK 4 Roadmap
+                  </button>
+                  <button onclick="fillPresetMessage('Quiz me on HSK 3 vocabulary')" class="preset-btn">
+                    📝 Quiz Me
+                  </button>
+                  <button onclick="fillPresetMessage('Practice conversation with me about shopping')" class="preset-btn">
+                    💬 Practice Conversation
+                  </button>
+                  <button onclick="fillPresetMessage('Teach me basic Chinese greetings')" class="preset-btn">
+                    👋 Learn Greetings
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <input
+                  type="text"
+                  id="chatInput"
+                  placeholder="Type your message or question..."
+                  class="input-search flex-1 pl-5 pr-5"
+                  onkeypress="if (event.key === 'Enter') sendMessage();"
+                />
+                <button onclick="sendMessage()" class="btn-primary px-5 md:px-8">Send</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Tab -->
+          <div id="progressTab" class="hidden px-4 md:px-6 animate-fade-in">
+            <!-- User Stats Cards -->
+            <div class="grid grid-cols-3 gap-3 mb-6">
+              <div class="text-center p-4 glass rounded-2xl">
+                <div class="text-2xl md:text-3xl font-bold text-orange-500 dark:text-orange-400" id="streak">0🔥</div>
+                <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium mt-1">Streak</div>
+              </div>
+              <div class="text-center p-4 glass rounded-2xl">
+                <div class="text-2xl md:text-3xl font-bold text-primary-500 dark:text-primary-400" id="points">0⭐</div>
+                <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium mt-1">Points</div>
+              </div>
+              <div class="text-center p-4 glass rounded-2xl">
+                <div class="text-2xl md:text-3xl font-bold text-accent-purple dark:text-purple-400" id="level">1📚</div>
+                <div class="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium mt-1">Level</div>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-5 md:gap-6">
+              <div class="card p-5 md:p-6">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+                  <span class="text-xl">📊</span> Overall Statistics
+                </h2>
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center p-4 glass rounded-2xl">
+                    <div>
+                      <div class="text-xs md:text-xs text-gray-600 dark:text-gray-300 font-medium">Total Characters Studied</div>
+                      <div class="text-xl md:text-3xl font-bold gradient-text" id="statsChars">0</div>
+                    </div>
+                    <div class="text-4xl md:text-5xl">汉</div>
+                  </div>
+                  <div class="flex justify-between items-center p-4 glass rounded-2xl">
+                    <div>
+                      <div class="text-xs md:text-xs text-gray-600 dark:text-gray-300 font-medium">Overall Accuracy</div>
+                      <div class="text-xl md:text-3xl font-bold text-accent-cyan" id="statsAccuracy">0%</div>
+                    </div>
+                    <div class="text-4xl md:text-5xl">✓</div>
+                  </div>
+                  <div class="flex justify-between items-center p-4 glass rounded-2xl">
+                    <div>
+                      <div class="text-xs md:text-xs text-gray-600 dark:text-gray-300 font-medium">Practice Time</div>
+                      <div class="text-xl md:text-3xl font-bold text-accent-purple" id="statsTime">0 min</div>
+                    </div>
+                    <div class="text-4xl md:text-5xl">⏱️</div>
+                  </div>
+                  <div class="flex justify-between items-center p-4 glass rounded-2xl">
+                    <div>
+                      <div class="text-xs md:text-xs text-gray-600 dark:text-gray-300 font-medium">Study Streak</div>
+                      <div class="text-xl md:text-3xl font-bold text-orange-500" id="statsStreak">0 days</div>
+                    </div>
+                    <div class="text-4xl md:text-5xl">🔥</div>
+                  </div>
+                </div>
+
+                <h2 class="text-base md:text-lg font-bold text-gray-900 dark:text-white mt-6 mb-4 flex items-center gap-2">
+                  <span class="text-xl">📈</span> HSK Level Progress
+                </h2>
+                <div id="hskProgress" class="space-y-3"></div>
+              </div>
+
+              <div class="card p-5 md:p-6">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+                  <span class="text-xl">🏆</span> Achievements
+                </h2>
+                <div class="grid grid-cols-2 gap-4" id="achievements"></div>
+              </div>
+
+              <!-- Visitor Counter -->
+              <div class="card p-5 md:p-6">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+                  <span class="text-xl">👁</span> Visitor Counter
+                </h2>
+                <div class="flex items-center justify-center gap-3">
+                  <script type='text/javascript' src='https://www.freevisitorcounters.com/auth.php?id=fc6ac1bd0b6053b677c5229e030960289586c9c7'></script>
+                  <script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1504953/t/2"></script>
+                  <style>
+                    .counterimg { border: none !important; }
+                    #visitorCounterContainer img { border: none !important; }
+                    .counterimg * { border: none !important; }
+                    a img { border: none !important; }
+                  </style>
+                </div>
+              </div>
+
+              <!-- Elfsight Form Builder | Xuetong -->
+              <div class="card p-5 md:p-6">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+                  <span class="text-xl">📝</span> Feedback Form
+                </h2>
+                <div class="elfsight-form-container">
+                  <script src="https://elfsightcdn.com/platform.js" async></script>
+                  <div class="elfsight-app-ea1c818e-d435-4e87-ad95-6480262b95b8" data-elfsight-app-lazy></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Me Tab -->
+          <div id="meTab" class="hidden px-4 md:px-6 animate-fade-in">
+            <div class="card p-5 md:p-6">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-accent-purple flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                  👤
+                </div>
+                <div>
+                  <h2 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">XueTong User</h2>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Chinese Language Learner</p>
+                  <div class="flex items-center gap-2 mt-2">
+                    <span class="px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs font-semibold">HSK Level 1</span>
+                    <span class="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-semibold">Active</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="glass rounded-2xl p-4 text-center">
+                  <div class="text-2xl md:text-3xl font-bold text-primary-500 dark:text-primary-400" id="meTotalWords">0</div>
+                  <div class="text-xs text-gray-600 dark:text-gray-400 font-medium mt-1">Words Learned</div>
+                </div>
+                <div class="glass rounded-2xl p-4 text-center">
+                  <div class="text-2xl md:text-3xl font-bold text-accent-purple dark:text-purple-400" id="meTotalQuizzes">0</div>
+                  <div class="text-xs text-gray-600 dark:text-gray-400 font-medium mt-1">Quizzes Taken</div>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <button onclick="showAboutModal()" class="w-full flex items-center gap-3 p-4 glass rounded-2xl hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all">
+                  <span class="text-xl">ℹ️</span>
+                  <span class="flex-1 text-left font-semibold text-gray-800 dark:text-gray-200">About XueTong</span>
+                  <span class="text-gray-400">→</span>
+                </button>
+                <button onclick="clearAllData()" class="w-full flex items-center gap-3 p-4 glass rounded-2xl hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all">
+                  <span class="text-xl">🗑️</span>
+                  <span class="flex-1 text-left font-semibold text-gray-800 dark:text-gray-200">Clear All Data</span>
+                  <span class="text-gray-400">→</span>
+                </button>
+                <button onclick="showExportModal()" class="w-full flex items-center gap-3 p-4 glass rounded-2xl hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all">
+                  <span class="text-xl">📤</span>
+                  <span class="flex-1 text-left font-semibold text-gray-800 dark:text-gray-200">Export Progress</span>
+                  <span class="text-gray-400">→</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-5 md:gap-6 mt-5">
+              <div class="card p-5 md:p-6">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+                  <span class="text-xl">🎯</span> Learning Goals
+                </h2>
+                <div class="space-y-4">
+                  <div>
+                    <div class="flex justify-between text-sm mb-2">
+                      <span class="text-gray-700 dark:text-gray-300 font-medium">Daily Words</span>
+                      <span class="text-primary-500 dark:text-primary-400 font-bold">0/20</span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-2">
+                      <span class="text-gray-700 dark:text-gray-300 font-medium">Weekly Quizzes</span>
+                      <span class="text-primary-500 dark:text-primary-400 font-bold">0/5</span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-2">
+                      <span class="text-gray-700 dark:text-gray-300 font-medium">Flashcard Reviews</span>
+                      <span class="text-primary-500 dark:text-primary-400 font-bold">0/50</span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card p-5 md:p-6">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
+                  <span class="text-xl">📅</span> Study Schedule
+                </h2>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3 p-3 glass rounded-xl">
+                    <span class="text-lg">📅</span>
+                    <div class="flex-1">
+                      <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">Today</div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">0 min studied</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 glass rounded-xl">
+                    <span class="text-lg">📆</span>
+                    <div class="flex-1">
+                      <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">This Week</div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">0 min studied</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 glass rounded-xl">
+                    <span class="text-lg">📈</span>
+                    <div class="flex-1">
+                      <div class="text-sm font-semibold text-gray-800 dark:text-gray-200">This Month</div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">0 min studied</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+
+    <!-- Bottom Navigation Bar - Modern Glass Style -->
+    <nav class="fixed bottom-0 left-0 right-0 z-[9999] nav-glass" style="position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important;">
+      <div class="max-w-[420px] md:max-w-[1200px] mx-auto px-2 md:px-6">
+        <div class="flex justify-around md:justify-center md:gap-4 lg:gap-8 py-1 md:py-2">
+          <button onclick="showTab('learn')" id="tabLearn" class="nav-modern active">
+            <span class="nav-icon">📖</span>
+            <span class="nav-label">Learn</span>
+          </button>
+          <button onclick="showTab('flashcards')" id="tabFlashcards" class="nav-modern">
+            <span class="nav-icon">🎴</span>
+            <span class="nav-label">Cards</span>
+          </button>
+          <button onclick="showTab('practice')" id="tabPractice" class="nav-modern">
+            <span class="nav-icon">✍️</span>
+            <span class="nav-label">Practice</span>
+          </button>
+          <button onclick="showTab('ai-tutor')" id="tabAI" class="nav-modern">
+            <span class="nav-icon">🧠</span>
+            <span class="nav-label">AI</span>
+          </button>
+          <button onclick="showTab('progress')" id="tabProgress" class="nav-modern">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Stats</span>
+          </button>
+          <button onclick="showTab('me')" id="tabMe" class="nav-modern">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Me</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+          <!-- Share Modal - Modern Bottom Sheet Style -->
+      <div id="shareModal" class="fixed inset-0 z-[10000] hidden items-end md:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity duration-300" onclick="closeShareModal()"></div>
+        
+        <!-- Modal Content - Bottom Sheet on Mobile -->
+        <div class="share-modal-content relative w-full md:w-auto md:max-w-lg transform transition-transform duration-300 ease-out translate-y-full md:translate-y-0 md:scale-95">
+          <div class="bg-white dark:bg-gray-900 rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden">
+            <!-- Handle Bar (Mobile) -->
+            <div class="md:hidden flex justify-center pt-3 pb-2">
+              <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+            </div>
+            
+            <!-- Header -->
+            <div class="px-6 pt-4 pb-5 border-b border-gray-200 dark:border-gray-800">
+              <div class="flex justify-between items-center">
+                <div>
+                  <h3 id="shareModalTitle" class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span class="text-2xl">📤</span> Share Your Results
+                  </h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Share your achievement with friends</p>
+                </div>
+                <button onclick="closeShareModal()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all hover:scale-110" aria-label="Close share modal">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Share Image Preview -->
+            <div class="px-6 py-5 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
+              <div class="relative rounded-2xl overflow-hidden shadow-lg bg-white dark:bg-gray-800">
+                <canvas id="shareCanvas" class="w-full h-auto max-h-64 object-contain"></canvas>
+                <div class="absolute top-3 right-3 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-md">
+                  <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">Preview</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Share Options -->
+            <div class="px-6 py-5">
+              <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">Share to</p>
+              
+              <!-- Platform Grid -->
+              <div class="grid grid-cols-3 gap-3 mb-5">
+                <!-- WeChat -->
+                <button onclick="shareToWeChatMoments()" class="share-btn group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white transition-all hover:scale-105 hover:shadow-lg" aria-label="Share to WeChat Moments">
+                  <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                    <span class="text-2xl">💬</span>
+                  </div>
+                  <span class="text-xs font-semibold">WeChat</span>
+                </button>
+                
+                <!-- Instagram -->
+                <button onclick="shareToInstagram()" class="share-btn group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 hover:from-purple-600 hover:via-pink-600 hover:to-orange-500 text-white transition-all hover:scale-105 hover:shadow-lg" aria-label="Share to Instagram">
+                  <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                    <span class="text-2xl">📸</span>
+                  </div>
+                  <span class="text-xs font-semibold">Instagram</span>
+                </button>
+                
+                <!-- Facebook -->
+                <button onclick="shareToFacebook()" class="share-btn group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white transition-all hover:scale-105 hover:shadow-lg" aria-label="Share to Facebook">
+                  <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                    <span class="text-2xl">📘</span>
+                  </div>
+                  <span class="text-xs font-semibold">Facebook</span>
+                </button>
+                
+                <!-- WhatsApp -->
+                <button onclick="shareToWhatsApp()" class="share-btn group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white transition-all hover:scale-105 hover:shadow-lg" aria-label="Share to WhatsApp">
+                  <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                    <span class="text-2xl">📱</span>
+                  </div>
+                  <span class="text-xs font-semibold">WhatsApp</span>
+                </button>
+                
+                <!-- Douyin -->
+                <button onclick="shareToDouyin()" class="share-btn group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-gray-800 to-black hover:from-gray-900 hover:to-black text-white transition-all hover:scale-105 hover:shadow-lg" aria-label="Share to Douyin">
+                  <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                    <span class="text-2xl">🎵</span>
+                  </div>
+                  <span class="text-xs font-semibold">Douyin</span>
+                </button>
+                
+                <!-- More Options -->
+                <button onclick="nativeShare()" class="share-btn group flex flex-col items-center gap-2 p-4 rounded-2xl bg-gradient-to-br from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white transition-all hover:scale-105 hover:shadow-lg" aria-label="More sharing options">
+                  <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                    <span class="text-2xl">🔗</span>
+                  </div>
+                  <span class="text-xs font-semibold">More</span>
+                </button>
+              </div>
+              
+              <!-- Action Buttons -->
+              <div class="space-y-3">
+                <!-- Download Report Button -->
+                <button onclick="downloadShareImage()" class="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-primary-500 to-accent-purple hover:from-primary-600 hover:to-accent-purple text-white font-semibold transition-all hover:scale-[1.02] hover:shadow-lg" aria-label="Download report image">
+                  <span class="text-xl">💾</span>
+                  <span>Download the Report</span>
+                </button>
+                
+                <!-- Copy Link Button -->
+                <button onclick="copyShareLink()" class="w-full flex items-center justify-center gap-3 p-4 rounded-2xl border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-all" aria-label="Copy share link">
+                  <span class="text-xl">📋</span>
+                  <span>Copy Link</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+            <!-- Share Toast Notification -->
+      <div id="shareToast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[10001] hidden items-center gap-2 px-6 py-3 rounded-full shadow-lg glass animate-slide-up">
+        <span id="shareToastIcon" class="text-lg">✓</span>
+        <p id="shareToastMessage" class="text-sm font-semibold text-gray-800 dark:text-white"></p>
+      </div>
+      <!-- Share Loading Overlay -->
+      <div id="shareLoadingOverlay" class="fixed inset-0 z-[10002] hidden bg-black/40 backdrop-blur-sm flex items-center justify-center">
+        <div class="glass p-6 rounded-2xl">
+          <div class="flex items-center gap-3">
+            <div class="w-6 h-6 border-3 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-gray-800 dark:text-white font-semibold">Processing...</span>
+          </div>
+        </div>
+      </div>
+      
+                                    <script src="script.js" charset="UTF-8"></script>
+      <script src="ui-enhancements.js" charset="UTF-8"></script>
+      <script src="share.js" charset="UTF-8"></script>
+    <script>
+      // Fallback initialization - ensure vocabulary is displayed
+      (function() {
+        function initVocab() {
+          if (typeof vocabulary !== 'undefined' && typeof hskVocabulary !== 'undefined') {
+            if (!vocabulary || vocabulary.length === 0) {
+              vocabulary = hskVocabulary['hsk1'] || [];
+            }
+            var container = document.getElementById('vocabCards');
+            if (container && typeof renderVocabCards === 'function') {
+              renderVocabCards(false);
+            }
+          }
+        }
+
+        // Try immediately
+        initVocab();
+
+        // Also try after a short delay
+        setTimeout(initVocab, 100);
+
+        // And on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', initVocab);
+
+        // And on window load
+        window.addEventListener('load', initVocab);
+      })();
+    </script>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="fixed inset-0 z-[10001] hidden items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="aboutModalTitle">
+      <!-- Backdrop -->
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity duration-300" onclick="closeAboutModal()"></div>
+      
+      <!-- Modal Content -->
+      <div class="relative w-full max-w-lg mx-4 transform transition-all duration-300 scale-95 opacity-0" id="aboutModalContent">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+          <!-- Header -->
+          <div class="relative bg-gradient-to-br from-primary-500 to-accent-purple p-8 text-center">
+            <button onclick="closeAboutModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-all" aria-label="Close about modal">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+            
+            <h2 id="aboutModalTitle" class="text-2xl font-bold text-white mb-2">XueTong 学通</h2>
+            <p class="text-white/80 text-sm">Smart Learning for Chinese Mastery</p>
+          </div>
+          
+          <!-- Content -->
+          <div class="p-6 space-y-6">
+            <!-- Developer Info -->
+            <div class="text-center">
+              <!-- Developer Avatar -->
+              <div class="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden border-4 border-primary-200 dark:border-primary-800 shadow-lg bg-gradient-to-br from-primary-400 to-accent-purple flex items-center justify-center">
+                <img src="images/developer-photo.jpg" alt="MD Milton Babu" class="w-full h-full object-cover" />
+              </div>
+              
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">MD Milton Babu</h3>
+              <p class="text-primary-500 dark:text-primary-400 font-medium">Developer & Creator</p>
+              <p class="text-gray-600 dark:text-gray-300 mt-2">North China University of Water Resources and Electric Power</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Version 1.0.0</p>
+            </div>
+            
+            <!-- Important Notice Board -->
+            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4">
+              <h3 class="text-lg font-bold text-amber-800 dark:text-amber-400 mb-3 flex items-center gap-2">
+                <span>📢</span> Important Notices
+              </h3>
+              <div class="space-y-3 text-sm text-amber-700 dark:text-amber-300">
+                <div class="flex gap-2">
+                  <span class="font-bold">•</span>
+                  <span>New AI Tutor feature added! Get personalized help with your Chinese learning.</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="font-bold">•</span>
+                  <span>Progress tracking improved - all your study activities are now saved.</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="font-bold">•</span>
+                  <span>Flashcards and quiz features fully functional with XP rewards.</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="font-bold">•</span>
+                  <span>Your data is stored locally in your browser for privacy.</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-4">
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                <span>📧</span> Contact
+              </h3>
+              <div class="space-y-2 text-sm">
+                <div class="flex items-center gap-3">
+                  <span class="text-xl">📧</span>
+                  <a href="mailto:milton@stu.ncwu.edu.cn" class="text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
+                    milton@stu.ncwu.edu.cn
+                  </a>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-xl">📧</span>
+                  <a href="mailto:md.milton@qq.com" class="text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
+                    md.milton@qq.com
+                  </a>
+                </div>
+                <div class="flex items-center gap-3">
+                  <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  <a href="https://wa.me/8617513257179" target="_blank" rel="noopener noreferrer" class="text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
+                    +86 175 1325 7179
+                  </a>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-xl">💬</span>
+                  <span class="text-gray-600 dark:text-gray-400">Feedback & Support Welcome!</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Social Media Links -->
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-4">
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                <span>🔗</span> Connect
+              </h3>
+              <div class="flex gap-3">
+                <a href="https://www.linkedin.com/in/milton-babu" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all hover:scale-105">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                  <span class="text-sm font-semibold">LinkedIn</span>
+                </a>
+                <a href="https://www.instagram.com/milton.sys" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 hover:from-purple-700 hover:via-pink-600 hover:to-orange-500 text-white rounded-xl transition-all hover:scale-105">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                  <span class="text-sm font-semibold">Instagram</span>
+                </a>
+              </div>
+            </div>
+            
+            <!-- Blog Link -->
+            <div class="bg-gradient-to-r from-primary-50 to-accent-purple/10 dark:from-primary-900/20 dark:to-accent-purple/20 border border-primary-200 dark:border-primary-800 rounded-2xl p-4 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:border-primary-400 dark:hover:border-primary-500 cursor-pointer group animate-pulse-soft">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-purple flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg shadow-primary-500/30">
+                  <span class="text-2xl transition-transform duration-300 group-hover:scale-110">📖</span>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-base font-bold text-gray-900 dark:text-white mb-1 transition-colors duration-300 group-hover:text-primary-600 dark:group-hover:text-primary-300">Learn More About XueTong</h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300 group-hover:text-gray-800 dark:group-hover:text-gray-200">Discover features, updates, and more details about the app</p>
+                </div>
+                <a href="https://ncwu-cst.blogspot.com/p/about-xuetong.html" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-gradient-to-r from-primary-500 to-accent-purple text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-all duration-300 flex items-center gap-2 hover:shadow-lg hover:scale-105 hover:from-primary-600 hover:to-accent-purple/80">
+                  <span>Read</span>
+                  <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            
+            <!-- Features List -->
+            <div>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">App Features</h3>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                  <span>📚</span> HSK Vocabulary
+                </div>
+                <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                  <span>🎴</span> Flashcards
+                </div>
+                <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                  <span>✍️</span> Practice Quizzes
+                </div>
+                <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                  <span>🧠</span> AI Tutor
+                </div>
+                <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                  <span>📊</span> Progress Tracking
+                </div>
+                <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                  <span>🔊</span> Audio Pronunciation
+                </div>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="text-center pt-4 border-t border-gray-200 dark:border-gray-700">
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                © 2026 XueTong 学通. All rights reserved.
+              </p>
+              <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                Made for Chinese language learners everywhere 🌏
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="exportModal" class="fixed inset-0 z-[10001] hidden items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="exportModalTitle">
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity duration-300" onclick="closeExportModal()"></div>
+      
+      <div class="relative w-full max-w-md mx-4 transform transition-all duration-300 scale-95 opacity-0" id="exportModalContent">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden">
+          <div class="relative bg-gradient-to-br from-primary-500 to-accent-purple p-6 text-center">
+            <button onclick="closeExportModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-all" aria-label="Close export modal">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+            
+            <h2 id="exportModalTitle" class="text-2xl font-bold text-white mb-2">Export Progress</h2>
+            <p class="text-white/80 text-sm">Choose your preferred format</p>
+          </div>
+          
+          <div class="p-6 space-y-4">
+            <button onclick="exportToExcel()" class="w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold transition-all hover:scale-105 hover:shadow-lg">
+              <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                <span class="text-2xl">📊</span>
+              </div>
+              <div class="text-left">
+                <div class="text-lg font-bold">Excel (XLSX)</div>
+                <div class="text-sm opacity-90">Spreadsheet format</div>
+              </div>
+            </button>
+            
+            <button onclick="exportToPDF()" class="w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold transition-all hover:scale-105 hover:shadow-lg">
+              <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                <span class="text-2xl">📄</span>
+              </div>
+              <div class="text-left">
+                <div class="text-lg font-bold">PDF</div>
+                <div class="text-sm opacity-90">Document format</div>
+              </div>
+            </button>
+            
+            <button onclick="exportToJSON()" class="w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold transition-all hover:scale-105 hover:shadow-lg">
+              <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                <span class="text-2xl">📋</span>
+              </div>
+              <div class="text-left">
+                <div class="text-lg font-bold">JSON</div>
+                <div class="text-sm opacity-90">Data format</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Tutor Notification Container -->
+    <div id="aiTutorNotification" class="fixed bottom-40 right-4 sm:right-6 z-[9999] max-w-[150px] sm:max-w-xs transition-all duration-300 opacity-0 transform translate-y-2 pointer-events-none">
+      <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 py-1.5 sm:px-4 sm:py-3 rounded-2xl shadow-2xl flex items-center gap-1.5 sm:gap-3">
+        <span class="text-lg sm:text-2xl">💬</span>
+        <p id="aiTutorNotificationText" class="text-[10px] sm:text-sm font-medium"></p>
+      </div>
+    </div>
+
+    <!-- Floating AI Tutor Button -->
+    <button id="floatingAITutorBtn" onclick="toggleAITutorPopup()" class="fixed bottom-24 right-6 w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full shadow-2xl flex items-center justify-center text-white text-3xl transition-all z-[10000] cursor-pointer hover:scale-110 hover:shadow-blue-500/50 hover:shadow-2xl active:scale-95" style="width: 4rem !important; height: 4rem !important; min-width: 4rem !important; max-width: 4rem !important; min-height: 4rem !important; max-height: 4rem !important; border-radius: 50% !important; -webkit-border-radius: 50% !important; -moz-border-radius: 50% !important; box-sizing: border-box !important; -webkit-box-sizing: border-box !important; -moz-box-sizing: border-box !important;">
+      💬
+    </button>
+
+    <!-- AI Tutor Small Notification -->
+    <div id="aiTutorNotification" class="fixed z-[10001] hidden transition-all duration-500" style="bottom: 6rem !important; right: 1rem !important; -webkit-transition: all 0.5s !important; -moz-transition: all 0.5s !important;">
+      <div class="relative max-w-[10rem] sm:max-w-xs">
+        <div class="absolute -top-2 left-1/2 w-0 h-0 border-l-8 border-t-8 border-transparent"></div>
+        <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 py-1.5 rounded-lg shadow-lg" style="border-radius: 0.75rem !important; -webkit-border-radius: 0.75rem !important;">
+          <div class="flex items-start gap-1.5">
+            <span class="text-base sm:text-lg">💬</span>
+            <p id="aiTutorNotificationText" class="text-[10px] sm:text-xs font-medium leading-tight"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movable AI Tutor Popup -->
+    <div id="aiTutorPopup" class="fixed hidden z-[10000] w-96 max-w-[calc(100vw-2rem)]" style="left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; -webkit-transform: translate(-50%, -50%) !important;">
+      <div id="aiTutorPopupHeader" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-t-2xl cursor-move flex justify-between items-center" style="border-top-left-radius: 1rem !important; border-top-right-radius: 1rem !important; -webkit-border-top-left-radius: 1rem !important; -webkit-border-top-right-radius: 1rem !important;">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💬</span>
+          <span class="font-bold">AI Tutor</span>
+        </div>
+        <button onclick="event.stopPropagation(); closeAITutorPopup();" class="text-white hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors hover:scale-110 active:scale-95" style="border-radius: 50% !important; -webkit-border-radius: 50% !important; cursor: pointer !important;">
+          ✕
+        </button>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-b-2xl shadow-2xl overflow-hidden" style="border-bottom-left-radius: 1rem !important; border-bottom-right-radius: 1rem !important; -webkit-border-bottom-left-radius: 1rem !important; -webkit-border-bottom-right-radius: 1rem !important;">
+        <div id="popupChatMessages" class="h-80 overflow-y-auto p-4 space-y-3">
+          <div class="flex gap-3">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style="border-radius: 0.75rem !important; -webkit-border-radius: 0.75rem !important;">
+              AI
+            </div>
+            <div class="bg-gray-100 dark:bg-gray-700 rounded-2xl rounded-tl-none p-3 max-w-[85%]" style="border-radius: 1rem !important; border-top-left-radius: 0 !important; -webkit-border-radius: 1rem !important; -webkit-border-top-left-radius: 0 !important;">
+              <p class="text-gray-800 dark:text-gray-100 text-sm">
+                你好! I'm your Chinese tutor. How can I help you today?
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="p-3 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex gap-2">
+            <input
+              type="text"
+              id="popupChatInput"
+              placeholder="Ask me anything..."
+              class="flex-1 px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onkeypress="if (event.key === 'Enter') sendPopupMessage();"
+              style="border-radius: 0.75rem !important; -webkit-border-radius: 0.75rem !important;"
+            />
+            <button onclick="sendPopupMessage()" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl text-sm font-medium hover:opacity-90 transition-opacity" style="border-radius: 0.75rem !important; -webkit-border-radius: 0.75rem !important;">
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+
+
+

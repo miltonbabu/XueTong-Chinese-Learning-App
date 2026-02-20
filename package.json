@@ -1,0 +1,29 @@
+{
+  "name": "xuetong-app",
+  "version": "1.0.0",
+  "description": "XueTong - HSK Chinese Learning App with AI Tutor",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js",
+    "lint": "echo 'No linting configured'",
+    "test": "echo 'No tests configured'"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "keywords": [
+    "chinese",
+    "hsk",
+    "language-learning",
+    "ai-tutor",
+    "deepseek"
+  ],
+  "author": "XueTong",
+  "license": "MIT"
+}
