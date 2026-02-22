@@ -14,39 +14,46 @@ let currentFlashcardChar = ""; // Store current word's character for Listen butt
 // Text-to-speech function for Chinese pronunciation
 function speakChinese(text) {
   if ("speechSynthesis" in window) {
-    // Cancel any ongoing speech
-    speechSynthesis.cancel();
+    try {
+      speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "zh-CN";
-    utterance.rate = 0.8;
-    utterance.pitch = 1;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "zh-CN";
+      utterance.rate = 0.8;
+      utterance.pitch = 1;
 
-    // Load voices and find Chinese voice
-    const loadVoicesAndSpeak = () => {
-      const voices = speechSynthesis.getVoices();
-      const chineseVoice = voices.find((voice) => voice.lang.includes("zh"));
-      if (chineseVoice) {
-        utterance.voice = chineseVoice;
-      }
-      speechSynthesis.speak(utterance);
-    };
-
-    // Handle both cases: voices already loaded or need to wait
-    if (speechSynthesis.getVoices().length > 0) {
-      loadVoicesAndSpeak();
-    } else {
-      speechSynthesis.onvoiceschanged = loadVoicesAndSpeak;
-      // Fallback: try to speak anyway after a short delay
-      setTimeout(() => {
-        if (speechSynthesis.getVoices().length === 0) {
+      const loadVoicesAndSpeak = () => {
+        try {
+          const voices = speechSynthesis.getVoices();
+          const chineseVoice = voices.find((voice) => voice.lang.includes("zh"));
+          if (chineseVoice) {
+            utterance.voice = chineseVoice;
+          }
           speechSynthesis.speak(utterance);
+        } catch (e) {
+          console.error("Error speaking:", e);
         }
-      }, 100);
-    }
+      };
 
-    // Track listening activity
-    trackListeningActivity(text);
+      if (speechSynthesis.getVoices().length > 0) {
+        loadVoicesAndSpeak();
+      } else {
+        speechSynthesis.onvoiceschanged = loadVoicesAndSpeak;
+        setTimeout(() => {
+          try {
+            if (speechSynthesis.getVoices().length === 0) {
+              speechSynthesis.speak(utterance);
+            }
+          } catch (e) {
+            console.error("Error in fallback speak:", e);
+          }
+        }, 100);
+      }
+
+      trackListeningActivity(text);
+    } catch (e) {
+      console.error("Speech synthesis error:", e);
+    }
   } else {
     console.warn("Text-to-speech not supported in this browser");
     alert("Text-to-speech is not supported in this browser. Please try a different browser.");
@@ -30459,13 +30466,13 @@ function renderVocabCards(showAll = false) {
         </div>
         <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           <div class="text-xs sm:text-sm text-gray-700 dark:text-gray-200 hidden sm:block">${word.meaning}</div>
-          <button onclick="event.stopPropagation(); copyVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="bg-gray-500 hover:bg-gray-600 text-white px-1.5 sm:px-2 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-1" title="Copy word">
+          <button onclick="event.stopPropagation(); copyVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-base sm:text-lg font-semibold transition-all flex items-center gap-1" title="Copy word">
             📋
           </button>
-          <button onclick="event.stopPropagation(); shareVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="bg-purple-500 hover:bg-purple-600 text-white px-1.5 sm:px-2 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-1" title="Share word">
+          <button onclick="event.stopPropagation(); shareVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-base sm:text-lg font-semibold transition-all flex items-center gap-1" title="Share word">
             🔗
           </button>
-          <button onclick="event.stopPropagation(); event.preventDefault(); speakChinese('${word.char}')" ontouchstart="event.stopPropagation(); event.preventDefault(); speakChinese('${word.char}')" class="bg-blue-500 hover:bg-blue-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-1" style="touch-action: manipulation !important;" title="Listen">
+          <button data-char="${word.char}" onclick="event.stopPropagation(); event.preventDefault(); speakChinese('${word.char}')" ontouchstart="event.stopPropagation(); event.preventDefault(); this.click();" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-base sm:text-lg font-semibold transition-all flex items-center gap-1" style="touch-action: manipulation !important; -webkit-tap-highlight-color: transparent;" title="Listen">
             🔊
           </button>
         </div>
@@ -32999,11 +33006,32 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("mouseup", endDrag);
   document.addEventListener("touchend", endDrag);
 
-  // Initialize AI tutor notification system
+  initializeSpeechSynthesis();
+
   initAITutorNotification();
 
   checkSharedWord();
 });
+
+function initializeSpeechSynthesis() {
+  if ("speechSynthesis" in window) {
+    try {
+      const voices = speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        speechSynthesis.onvoiceschanged = () => {
+          console.log("Speech synthesis voices loaded:", speechSynthesis.getVoices().length);
+        };
+      }
+      
+      const testUtterance = new SpeechSynthesisUtterance("");
+      testUtterance.lang = "zh-CN";
+      speechSynthesis.speak(testUtterance);
+      speechSynthesis.cancel();
+    } catch (e) {
+      console.log("Speech synthesis initialization:", e);
+    }
+  }
+}
 
 // AI Tutor Notification System
 const aiTutorMessages = [
@@ -33812,7 +33840,7 @@ function renderCurrentPage() {
           </div>
         </div>
         <div class="text-right flex items-center gap-3">
-          <button onclick="event.stopPropagation(); speakChinese('${word.char}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold transition-all flex items-center gap-1">
+          <button data-char="${word.char}" onclick="event.stopPropagation(); speakChinese('${word.char}')" ontouchstart="event.stopPropagation(); this.click();" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-base sm:text-lg font-semibold transition-all flex items-center gap-1" style="-webkit-tap-highlight-color: transparent;">
             🔊
           </button>
           <div>
