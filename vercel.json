@@ -3,18 +3,30 @@
   "name": "xuetong-app",
   "builds": [
     {
-      "src": "server/server.js",
+      "src": "netlify/functions/api/chat.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "netlify/functions/api/online-count.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "netlify/functions/api/ping.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server/server.js"
+      "src": "/api/chat",
+      "dest": "/netlify/functions/api/chat.js"
     },
     {
-      "src": "/health",
-      "dest": "/server/server.js"
+      "src": "/api/online-count",
+      "dest": "/netlify/functions/api/online-count.js"
+    },
+    {
+      "src": "/api/ping",
+      "dest": "/netlify/functions/api/ping.js"
     },
     {
       "src": "/(.*)",
@@ -26,9 +38,23 @@
     "NODE_ENV": "production"
   },
   "functions": {
-    "server/server.js": {
+    "netlify/functions/api/chat.js": {
       "memory": 1024,
+      "maxDuration": 30
+    },
+    "netlify/functions/api/online-count.js": {
+      "memory": 512,
+      "maxDuration": 10
+    },
+    "netlify/functions/api/ping.js": {
+      "memory": 512,
       "maxDuration": 10
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/xuetong-latest.html"
+    }
+  ]
 }
