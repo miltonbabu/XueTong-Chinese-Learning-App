@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+  command = ""
+
+[[redirects]]
+  from = "/*"
+  to = "/xuetong-latest.html"
+  status = 200
+  force = false
+
+[build.environment]
+  NODE_VERSION = "18"
