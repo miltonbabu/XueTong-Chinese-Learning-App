@@ -30477,7 +30477,7 @@ function renderVocabCards(showAll = false) {
           <button onclick="event.stopPropagation(); shareVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-base sm:text-lg font-semibold transition-all flex items-center gap-1" title="Share word">
             🔗
           </button>
-          <button data-char="${word.char}" onclick="event.stopPropagation(); event.preventDefault(); speakChinese('${word.char}')" ontouchstart="event.stopPropagation(); event.preventDefault(); this.click();" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-base sm:text-lg font-semibold transition-all flex items-center gap-1" style="touch-action: manipulation !important; -webkit-tap-highlight-color: transparent;" title="Listen">
+          <button data-char="${word.char}" onclick="speakChinese('${word.char}'); event.stopPropagation();" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-base sm:text-lg font-semibold transition-all flex items-center gap-1" style="touch-action: auto; -webkit-tap-highlight-color: transparent; cursor: pointer;" title="Listen">
             🔊
           </button>
         </div>
