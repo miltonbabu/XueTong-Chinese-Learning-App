@@ -30463,6 +30463,7 @@ function renderVocabCards(showAll = false) {
         <div class="flex-1 min-w-0">
           <div class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-0.5 sm:mb-1">${word.char}</div>
           <div class="text-sm sm:text-lg text-gray-600 dark:text-gray-300">${word.pinyin}</div>
+          <div class="text-xs sm:text-sm text-gray-700 dark:text-gray-200 mt-0.5 sm:hidden">${word.meaning}</div>
         </div>
         <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           <div class="text-xs sm:text-sm text-gray-700 dark:text-gray-200 hidden sm:block">${word.meaning}</div>
