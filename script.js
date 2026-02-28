@@ -25,7 +25,9 @@ function speakChinese(text) {
       const loadVoicesAndSpeak = () => {
         try {
           const voices = speechSynthesis.getVoices();
-          const chineseVoice = voices.find((voice) => voice.lang.includes("zh"));
+          const chineseVoice = voices.find((voice) =>
+            voice.lang.includes("zh"),
+          );
           if (chineseVoice) {
             utterance.voice = chineseVoice;
           }
@@ -56,7 +58,9 @@ function speakChinese(text) {
     }
   } else {
     console.warn("Text-to-speech not supported in this browser");
-    alert("Text-to-speech is not supported in this browser. Please try a different browser.");
+    alert(
+      "Text-to-speech is not supported in this browser. Please try a different browser.",
+    );
   }
 }
 
@@ -30463,10 +30467,10 @@ function renderVocabCards(showAll = false) {
         <div class="flex-1 min-w-0">
           <div class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-0.5 sm:mb-1">${word.char}</div>
           <div class="text-sm sm:text-lg text-gray-600 dark:text-gray-300">${word.pinyin}</div>
-          <div class="text-xs sm:text-sm text-gray-700 dark:text-gray-200 mt-0.5 sm:hidden">${word.meaning}</div>
+          <div class="text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-medium mt-0.5 sm:hidden">${word.meaning}</div>
         </div>
         <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-          <div class="text-xs sm:text-sm text-gray-700 dark:text-gray-200 hidden sm:block">${word.meaning}</div>
+          <div class="text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 font-medium hidden sm:block">${word.meaning}</div>
           <button onclick="event.stopPropagation(); copyVocabWord('${word.char}', '${word.pinyin}', '${word.meaning}', this)" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-base sm:text-lg font-semibold transition-all flex items-center gap-1" title="Copy word">
             📋
           </button>
@@ -32648,9 +32652,9 @@ function sendMessage() {
 
   // Add user message
   const userMessage = document.createElement("div");
-  userMessage.className = "flex justify-end mb-4";
+  userMessage.className = "flex justify-end mb-3";
   userMessage.innerHTML = `
-    <div class="bg-blue-500 text-white rounded-2xl rounded-br-md p-4 max-w-md">
+    <div class="bg-blue-500 text-white rounded-2xl rounded-br-md p-3 md:p-4 max-w-[85%] text-sm md:text-base">
       ${escapeHtml(message)}
     </div>
   `;
@@ -32660,10 +32664,10 @@ function sendMessage() {
 
   // Show loading indicator
   const loadingDiv = document.createElement("div");
-  loadingDiv.className = "flex justify-start mb-4";
+  loadingDiv.className = "flex justify-start mb-3";
   loadingDiv.id = "aiLoading";
   loadingDiv.innerHTML = `
-    <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-2xl rounded-bl-md p-4 max-w-md">
+    <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-2xl rounded-bl-md p-3 md:p-4">
       <div class="flex gap-1">
         <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
         <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
@@ -32704,12 +32708,12 @@ function sendMessage() {
       chatHistory.push({ role: "assistant", content: aiResponse });
 
       const aiMessage = document.createElement("div");
-      aiMessage.className = "flex justify-start mb-4";
+      aiMessage.className = "flex justify-start mb-3";
       aiMessage.id = "ai-msg-" + Date.now();
       const msgId = aiMessage.id;
       aiMessage.innerHTML = `
-      <div class="flex flex-col max-w-md">
-        <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-2xl rounded-bl-md p-4 whitespace-pre-wrap">${escapeHtml(aiResponse)}</div>
+      <div class="flex flex-col max-w-[85%]">
+        <div class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-2xl rounded-bl-md p-3 md:p-4 whitespace-pre-wrap text-sm md:text-base">${escapeHtml(aiResponse)}</div>
         <div class="flex gap-2 mt-1">
           <button onclick="copyMessage('${msgId}')" class="text-xs px-2 py-1 rounded bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors">
             Copy
@@ -32736,9 +32740,9 @@ function sendMessage() {
 function showAIError(errorMsg) {
   const chatContainer = document.getElementById("chatMessages");
   const errorDiv = document.createElement("div");
-  errorDiv.className = "flex justify-start mb-4";
+  errorDiv.className = "flex justify-start mb-3";
   errorDiv.innerHTML = `
-    <div class="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 rounded-2xl rounded-bl-md p-4 max-w-md">
+    <div class="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 rounded-2xl rounded-bl-md p-3 md:p-4 max-w-[85%] text-sm md:text-base">
       <strong>Error:</strong> ${escapeHtml(errorMsg)}
     </div>
   `;
@@ -32761,22 +32765,13 @@ function fillPresetMessage(message) {
 function clearChatHistory() {
   const chatContainer = document.getElementById("chatMessages");
   chatContainer.innerHTML = `
-    <div class="flex gap-3">
-      <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-purple flex items-center justify-center text-white font-bold flex-shrink-0 shadow-lg shadow-primary-500/30">
+    <div class="flex gap-2 md:gap-3">
+      <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-gradient-to-br from-primary-500 to-accent-purple flex items-center justify-center text-white text-sm md:text-base font-bold flex-shrink-0 shadow-lg shadow-primary-500/30">
         AI
       </div>
-      <div class="glass rounded-2xl rounded-tl-none p-4 max-w-[85%]">
+      <div class="glass rounded-2xl rounded-tl-none p-3 md:p-4 max-w-[85%]">
         <p class="text-gray-800 dark:text-gray-100 text-sm md:text-base font-medium">
-          你好! I'm your Chinese tutor. I can help you with:
-        </p>
-        <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-1 font-medium">
-          <li>• Practicing conversations</li>
-          <li>• Explaining grammar</li>
-          <li>• Pronunciation tips</li>
-          <li>• Cultural insights</li>
-        </ul>
-        <p class="mt-2 text-gray-800 dark:text-gray-100 text-sm md:text-base font-medium">
-          What would you like to practice today?
+          你好! I'm your Chinese tutor. How can I help you today?
         </p>
       </div>
     </div>
@@ -33020,10 +33015,13 @@ function initializeSpeechSynthesis() {
       const voices = speechSynthesis.getVoices();
       if (voices.length === 0) {
         speechSynthesis.onvoiceschanged = () => {
-          console.log("Speech synthesis voices loaded:", speechSynthesis.getVoices().length);
+          console.log(
+            "Speech synthesis voices loaded:",
+            speechSynthesis.getVoices().length,
+          );
         };
       }
-      
+
       const testUtterance = new SpeechSynthesisUtterance("");
       testUtterance.lang = "zh-CN";
       speechSynthesis.speak(testUtterance);

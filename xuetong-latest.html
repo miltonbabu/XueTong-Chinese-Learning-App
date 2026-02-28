@@ -735,11 +735,11 @@
 
           <!-- AI Tutor Tab -->
           <div id="ai-tutorTab" class="hidden px-4 md:px-6 animate-fade-in">
-            <div class="card p-5 md:p-6">
-              <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <span class="text-xl">🧠</span> Your AI Chinese Tutor
+            <div class="card p-4 md:p-6">
+              <h2 class="text-base md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4 flex items-center gap-2">
+                <span class="text-lg md:text-xl">🧠</span> AI Chinese Tutor
               </h2>
-              <div class="glass border-l-4 border-primary-500 p-4 mb-4 rounded-r-xl rounded-l-none">
+              <div class="glass border-l-4 border-primary-500 p-3 mb-3 md:mb-4 rounded-r-xl rounded-l-none hidden sm:block">
                 <p class="text-sm text-gray-700 dark:text-gray-200 font-medium">
                   <strong class="text-primary-500 dark:text-primary-400">Your personalized AI tutor</strong> adapts to your learning style and helps you practice conversations, grammar, and pronunciation!
                 </p>
@@ -747,60 +747,51 @@
 
               <div class="flex justify-between items-center mb-2">
                   <p class="text-xs text-gray-600 dark:text-gray-400 font-medium">Chat with XueTong AI</p>
-                  <button onclick="clearChatHistory()" class="text-xs px-3 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors font-medium">
-                    Clear Chat
+                  <button onclick="clearChatHistory()" class="text-xs px-2 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors font-medium">
+                    Clear
                   </button>
                 </div>
-                <div id="chatMessages" class="space-y-4 mb-4 h-64 md:h-88 overflow-y-auto glass rounded-2xl p-4">
-                <div class="flex gap-3">
-                  <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-purple flex items-center justify-center text-white font-bold flex-shrink-0 shadow-lg shadow-primary-500/30">
+                <div id="chatMessages" class="space-y-3 mb-3 h-72 md:h-96 overflow-y-auto glass rounded-2xl p-3 md:p-4">
+                <div class="flex gap-2 md:gap-3">
+                  <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-gradient-to-br from-primary-500 to-accent-purple flex items-center justify-center text-white text-sm md:text-base font-bold flex-shrink-0 shadow-lg shadow-primary-500/30">
                     AI
                   </div>
-                  <div class="glass rounded-2xl rounded-tl-none p-4 max-w-[85%]">
+                  <div class="glass rounded-2xl rounded-tl-none p-3 md:p-4 max-w-[85%]">
                     <p class="text-gray-800 dark:text-gray-100 text-sm md:text-base font-medium">
-                      你好! I'm your Chinese tutor. I can help you with:
-                    </p>
-                    <ul class="mt-2 text-sm text-gray-700 dark:text-gray-300 space-y-1 font-medium">
-                      <li>• Practicing conversations</li>
-                      <li>• Explaining grammar</li>
-                      <li>• Pronunciation tips</li>
-                      <li>• Cultural insights</li>
-                    </ul>
-                    <p class="mt-2 text-gray-800 dark:text-gray-100 text-sm md:text-base font-medium">
-                      What would you like to practice today?
+                      你好! I'm your Chinese tutor. How can I help you today?
                     </p>
                   </div>
                 </div>
               </div>
 
               <!-- Preset Prompts Section -->
-              <div class="mb-4">
-                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">Quick Start Prompts:</p>
-                <div class="flex flex-wrap gap-2">
-                  <button onclick="fillPresetMessage('I need a roadmap for HSK 4 exam preparation')" class="preset-btn">
-                    🗺️ HSK 4 Roadmap
+              <div class="mb-3">
+                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium hidden sm:block">Quick Start Prompts:</p>
+                <div class="flex flex-wrap gap-1.5 sm:gap-2">
+                  <button onclick="fillPresetMessage('I need a roadmap for HSK 4 exam preparation')" class="preset-btn text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5">
+                    🗺️ HSK 4
                   </button>
-                  <button onclick="fillPresetMessage('Quiz me on HSK 3 vocabulary')" class="preset-btn">
-                    📝 Quiz Me
+                  <button onclick="fillPresetMessage('Quiz me on HSK 3 vocabulary')" class="preset-btn text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5">
+                    📝 Quiz
                   </button>
-                  <button onclick="fillPresetMessage('Practice conversation with me about shopping')" class="preset-btn">
-                    💬 Practice Conversation
+                  <button onclick="fillPresetMessage('Practice conversation with me about shopping')" class="preset-btn text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5">
+                    💬 Practice
                   </button>
-                  <button onclick="fillPresetMessage('Teach me basic Chinese greetings')" class="preset-btn">
-                    👋 Learn Greetings
+                  <button onclick="fillPresetMessage('Teach me basic Chinese greetings')" class="preset-btn text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5">
+                    👋 Greetings
                   </button>
                 </div>
               </div>
 
-              <div class="flex gap-3">
+              <div class="flex gap-2 sm:gap-3">
                 <input
                   type="text"
                   id="chatInput"
-                  placeholder="Type your message or question..."
-                  class="input-search flex-1 pl-5 pr-5"
+                  placeholder="Type your message..."
+                  class="input-search flex-1 pl-4 pr-4 text-sm md:text-base"
                   onkeypress="if (event.key === 'Enter') sendMessage();"
                 />
-                <button onclick="sendMessage()" class="btn-primary px-5 md:px-8">Send</button>
+                <button onclick="sendMessage()" class="btn-primary px-4 md:px-6 text-sm md:text-base">Send</button>
               </div>
             </div>
           </div>
