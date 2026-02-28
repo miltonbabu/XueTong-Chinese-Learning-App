@@ -1,0 +1,51 @@
+app = "xuetong-app"
+primary_region = "sin"
+
+[build]
+  [build.args]
+    CMD = "node server.js"
+
+[env]
+  PORT = "3000"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  min_machines_running = 0
+
+[processes]
+  app = "xuetong-app"
+  executor = "node"
+  
+  [processes.app]
+    command = "node server.js"
+
+[vm]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 3000
+
+[[services.ports]]
+  port = 80
+  handlers = ["http"]
+  force_https = true
+
+[[services.tcp_checks]]
+  interval = 15000
+  timeout = 2000
+  grace_period = "5s"
+  restart_limit = 0
+
+[[services.http_checks]]
+  interval = 15000
+  timeout = 2000
+  grace_period = "5s"
+  restart_limit = 0
+  method = "GET"
+  path = "/health"
+  protocol = "http"

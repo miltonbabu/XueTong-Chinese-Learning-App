@@ -1,20 +1,6 @@
 {
   "version": 2,
   "name": "xuetong-app",
-  "builds": [
-    {
-      "src": "netlify/functions/api/chat.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "netlify/functions/api/online-count.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "netlify/functions/api/ping.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/api/chat",
